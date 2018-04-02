@@ -2,3 +2,9 @@
 work/scripts/__pycache__/
 
 .idea/
+
+LinearRegression/files/
+
+LinearRegression/db\.sqlite3
+
+LinearRegression/LinearRegression/__pycache__/
