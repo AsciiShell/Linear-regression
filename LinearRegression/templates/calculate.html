@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>Linear Regression</title>
+    <link rel="shortcut icon" href="https://techno-tvel.ru/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://techno-tvel.ru/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+
+<main role="main" class="container">
+
+    <p>Обработка данных файла {{num}}</p>
+    {% if dataset is None %}
+        Ошибка чтения датасета
+    {% else %}
+        <form  action="" method="post" enctype="multipart/form-data">
+        {% for line in head %}
+            <div class="form-row">
+                <div class="col-auto">
+                    Имя: {{line}}
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="result" id="radio{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="radio{{line}}">
+                            Независимая
+                        </label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="variable-line-{{line}}" id="variableLine{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="variableLine{{line}}">
+                            Линейно
+                        </label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="variable-square-{{line}}" id="variableSquare{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="variableSquare{{line}}">
+                            Квадратично
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Обработать</button>
+        </form>
+        <ul>
+            <li>{{ head }}</li>
+        {% for line in dataset %}
+            <li>{{ line }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+</main>
+</body>
+</html>

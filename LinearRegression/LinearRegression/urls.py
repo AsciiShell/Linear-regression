@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path
 from . import index
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index.index, name='index'),
-    path('datasetUpload', index.uploadFile, name='index'),
+    path('', index.uploadFile),
+    path('<int:num>.csv', index.calculate)
 ]

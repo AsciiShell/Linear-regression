@@ -1,18 +1,9 @@
+from time import time
+
 from django import forms
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from time import time
-from os import mkdir
 
-def index(request):
-    """
-    View function for home page of site.
-    """
-    # Render the HTML template index.html with the data in the context variable.
-    return render(
-        request,
-        'index.html'
-    )
 
 
 class UploadFileForm(forms.Form):
@@ -37,3 +28,27 @@ def uploadFile(request):
     else:
         form = UploadFileForm()
     return render(request, 'index.html', {'form': form})
+
+@csrf_exempt
+def calculate(request, num):
+    """
+    View function for home page of site.
+    """
+    try:
+        with open("files/" + str(num) + ".csv", "r") as f:
+            head = f.readline()[:-1].split(";")
+            lines = f.readlines()
+            dataset = []
+            for line in lines:
+                items = line.split(";")
+                if len(head) != len(items):
+                    dataset = None
+                    break
+                dataset.append([float(i) for i in items])
+    except FileNotFoundError:
+        dataset = None
+    return render(
+        request,
+        'calculate.html',
+        {'num': num, 'dataset': dataset, 'head': head}
+    )
