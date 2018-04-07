@@ -11,11 +11,25 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-def handle_uploaded_file(f):
+def handle_uploaded_file(f, sep=';'):
     filename = str(round(time())) + ".csv"
-    with open("files/" + filename, 'wb') as destination:
+    with open("files/.temp", 'wb') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    try:
+        with open("files/.temp", "r") as source, open("files/" + filename, 'w') as destination:
+
+            data = source.read().splitlines()
+            count = len(data[0].split(sep))
+            result = ""
+            for line in data:
+                items = line.split(sep)
+                if len(items) != count:
+                    return ""
+                result += ";".join(items) + "\n"
+            destination.write(result)
+    except Exception as e:
+        return ""
     return filename
 
 
@@ -23,7 +37,7 @@ def handle_uploaded_file(f):
 def uploadFile(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
-        file = handle_uploaded_file(request.FILES['file'])
+        file = handle_uploaded_file(request.FILES['file'], request.POST['sep'])
         return HttpResponseRedirect(file)
     else:
         form = UploadFileForm()

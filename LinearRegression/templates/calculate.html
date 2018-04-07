@@ -61,12 +61,7 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Обработать</button>
         </form>
-        <ul>
-            <li>{{ head }}</li>
-        {% for line in dataset %}
-            <li>{{ line }}</li>
-        {% endfor %}
-        </ul>
+        {{head}}
     {% endif %}
 
 </main>
