@@ -9,8 +9,10 @@
     <link rel="icon" href="https://techno-tvel.ru/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
@@ -18,53 +20,105 @@
 </head>
 
 <body>
-
-
 <main role="main" class="container">
 
     <p>Обработка данных файла {{num}}</p>
     <a href="/">На главную</a>
     {% if dataset is None %}
-        Ошибка чтения датасета
+    Ошибка чтения датасета
     {% else %}
-        <form  action="" method="post" enctype="multipart/form-data">
+    <form id="form">
         {% for line in head %}
-            <div class="form-row">
-                <div class="col-auto">
-                    Имя: {{line}}
-                </div>
-                <div class="col-auto">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="result" id="radio{{line}}" value="{{line}}">
-                        <label class="form-check-label" for="radio{{line}}">
-                            Независимая
-                        </label>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="variable-line-{{line}}" id="variableLine{{line}}" value="{{line}}">
-                        <label class="form-check-label" for="variableLine{{line}}">
-                            Линейно
-                        </label>
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="variable-square-{{line}}" id="variableSquare{{line}}" value="{{line}}">
-                        <label class="form-check-label" for="variableSquare{{line}}">
-                            Квадратично
-                        </label>
-                    </div>
+        <div class="form-row">
+            <div class="col-auto">
+                Имя: {{line}}
+            </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="result" id="radio{{line}}" value="{{line}}">
+                    <label class="form-check-label" for="radio{{line}}">
+                        Независимая
+                    </label>
                 </div>
             </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="variable-line-{{line}}"
+                           id="variableLine{{line}}" value="{{line}}">
+                    <label class="form-check-label" for="variableLine{{line}}">
+                        Линейно
+                    </label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="variable-square-{{line}}"
+                           id="variableSquare{{line}}" value="{{line}}">
+                    <label class="form-check-label" for="variableSquare{{line}}">
+                        Квадратично
+                    </label>
+                </div>
+            </div>
+        </div>
 
         {% endfor %}
         <button type="submit" class="btn btn-primary">Обработать</button>
-        </form>
-        {{head}}
+    </form>
+    <div class="alert alert-info collapse" role="alert">
+        Обработка...
+    </div>
+    <div class="alert alert-warning collapse" role="alert">
+        Ошибка обработки
+    </div>
+    <p id="r">R квадрат</p>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Коэффициент</th>
+            <th scope="col">Ошибка</th>
+            <th scope="col">t</th>
+            <th scope="col">p уровни</th>
+        </tr>
+        </thead>
+        <tbody id="tableTarget">
+        </tbody>
+    </table>
     {% endif %}
 
 </main>
 </body>
+<script type="text/javascript">
+    $("#form").submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            data: $("#form").serialize(),
+            success: function (data) {
+                $(".alert-info").addClass("collapse");
+
+                if (data["status"]) {
+                    $("#r").text("R квадрат: " + data['r']);
+                    let target = $("#tableTarget");
+                    target.empty();
+                    for (let i = 0; i < data['k'].length; i++) {
+                        target.append(" <tr>" +
+                            "            <th scope=\"row\">" + data["name"][i] + "</th>" +
+                            "            <td>" + data["k"][i][0] + "</td>" +
+                            "            <td>" + data["k"][i][1] + "</td>" +
+                            "            <td>" + data["k"][i][2] + "</td>" +
+                            "            <td>" + data["k"][i][3] + "</td>" +
+                            "        </tr>");
+                    }
+                }
+                else
+                    $(".alert-warning").removeClass("collapse");
+
+            }
+        });
+        $(".alert-info").removeClass("collapse");
+        $(".alert-warning").addClass("collapse");
+
+    });
+</script>
 </html>
