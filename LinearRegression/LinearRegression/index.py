@@ -1,14 +1,7 @@
 from time import time
 
-from django import forms
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
-
-
-class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
 
 
 def handle_uploaded_file(f, sep=';'):
@@ -21,27 +14,35 @@ def handle_uploaded_file(f, sep=';'):
 
             data = source.read().splitlines()
             count = len(data[0].split(sep))
-            result = ""
+            types = [int for _ in range(count)]
+            result = data[0] + "\n"
+            data = data[1:]
             for line in data:
                 items = line.split(sep)
                 if len(items) != count:
-                    return ""
+                    return "/"
+                for i in range(len(items)):
+                    try:
+                        types[i](items[i])
+                    except ValueError:
+                        types[i] = float
+                    except Exception:
+                        return "/"
                 result += ";".join(items) + "\n"
-            destination.write(result)
+            types = ";".join(["int" if _ == int else "float" for _ in types]) + "\n"
+            destination.write(types + result)
     except Exception as e:
-        return ""
+        return "/"
     return filename
 
 
 @csrf_exempt
 def uploadFile(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
         file = handle_uploaded_file(request.FILES['file'], request.POST['sep'])
         return HttpResponseRedirect(file)
-    else:
-        form = UploadFileForm()
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'index.html')
+
 
 @csrf_exempt
 def calculate(request, num):
@@ -50,6 +51,7 @@ def calculate(request, num):
     """
     try:
         with open("files/" + str(num) + ".csv", "r") as f:
+            types = [int if _ == "int" else float for _ in f.readline()[:-1].split(";")]
             head = f.readline()[:-1].split(";")
             lines = f.readlines()
             dataset = []
@@ -58,7 +60,7 @@ def calculate(request, num):
                 if len(head) != len(items):
                     dataset = None
                     break
-                dataset.append([float(i) for i in items])
+                dataset.append([types[i](items[i]) for i in range(len(items))])
     except FileNotFoundError:
         dataset = None
     return render(
