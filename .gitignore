@@ -1,10 +1,8 @@
 
-work/scripts/__pycache__/
-
 .idea/
 
-LinearRegression/files/
+files/
 
-LinearRegression/db\.sqlite3
+db\.sqlite3
 
-LinearRegression/LinearRegression/__pycache__/
+LinearRegression/__pycache__/
