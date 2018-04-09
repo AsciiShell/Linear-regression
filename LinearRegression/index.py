@@ -1,11 +1,29 @@
+# -*- coding: utf-8 -*-
+"""
+Библиотека функций обработчиков web запросов
+
+Данный файл сожержит методы для обработки данных и запросов web сервера
+
+Автор: Подчезерцев А.Е.
+"""
 from time import time
 from random import random
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+import pandas as pd
+import statsmodels.api as sm
+from sklearn.datasets import load_boston
 
 
 def handle_uploaded_file(f, sep=';'):
+    """
+    Проверяет загруженный файл
+    :param f: Структура файла
+    :param sep: Разделитель символов
+    :return: Адрес для перенаправления: имя загруженного файла в случае успеха или '/' в обратном
+    Автор: Подчезерцев А.Е.
+    """
     filename = str(round(time())) + ".csv"
     with open("files/.temp", 'wb') as destination:
         for chunk in f.chunks():
@@ -40,6 +58,12 @@ def handle_uploaded_file(f, sep=';'):
 
 @csrf_exempt
 def uploadFile(request):
+    """
+    Обрабатывает web запрос загрузки файла
+    :param request: Web-запрос
+    :return: Перенаправление при отправке файла, иначе страницу
+    Автор: Подчезерцев А.Е.
+    """
     if request.method == 'POST':
         file = handle_uploaded_file(request.FILES['file'], request.POST['sep'])
         return HttpResponseRedirect(file)
@@ -47,6 +71,12 @@ def uploadFile(request):
 
 
 def load_dataset(name):
+    """
+    Загружает датасет с диска
+    :param name: Имя файла
+    :return: Датасет и Имена переменных, None в случае ошибки
+    Автор: Подчезерцев А.Е.
+    """
     dataset = None
     head = None
     try:
@@ -68,6 +98,15 @@ def load_dataset(name):
 
 
 def handle_dataset(dataset, result, line, square):
+    """
+    Вычисляет параметры регрессии
+    :param dataset: Датасет
+    :param result: Номер результирующей переменной
+    :param line: Логический массив переменных, которые должны быть обработаны линейно
+    :param square: Логический массив переменных, которые должны быть обработаны квадратично
+    :return: R квадрат и данные регрессии для переменных
+    Автор: Подчезерцев А.Е.
+    """
     arr = [[random(), random(), random(), random()] for _ in range(len(dataset[0]))]
     return random(), arr
 
@@ -75,7 +114,11 @@ def handle_dataset(dataset, result, line, square):
 @csrf_exempt
 def calculate(request, num):
     """
-    View function for home page of site.
+    Обрабатывает web запрос вычисления регрессии
+    :param request: Web-запрос
+    :param num: номер файла
+    :return: Данные регрессии при отправке запроса, иначе страницу
+    Автор: Подчезерцев А.Е.
     """
     dataset, head = load_dataset(str(num))
     if request.method == "POST":

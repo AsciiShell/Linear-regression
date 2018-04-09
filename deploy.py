@@ -4,8 +4,11 @@ import statsmodels.api as sm
 from sklearn.datasets import load_boston
 
 boston = load_boston()
-dataset = pd.DataFrame(boston.data, columns=boston.feature_names)
-dataset['target'] = boston.target
+btarget = boston.target
+bdata = boston.data
+bfeat = boston.feature_names
+dataset = pd.DataFrame(bdata, columns=bfeat)
+dataset['target'] = btarget
 observations = len(dataset)
 variables = dataset.columns[:-1]
 X = dataset.ix[:, :-1]
