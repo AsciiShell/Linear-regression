@@ -98,16 +98,16 @@
                 $(".alert-info").addClass("collapse");
 
                 if (data["status"]) {
-                    $("#r").text("R квадрат: " + data['r']);
+                    $("#r").text("R квадрат: " + data['r'].toFixed(4));
                     let target = $("#tableTarget");
                     target.empty();
-                    for (let i = 0; i < data['k'].length; i++) {
+                    for (let key in data['k'][0]) {
                         target.append(" <tr>" +
-                            "            <th scope=\"row\">" + data["name"][i] + "</th>" +
-                            "            <td>" + data["k"][i][0] + "</td>" +
-                            "            <td>" + data["k"][i][1] + "</td>" +
-                            "            <td>" + data["k"][i][2] + "</td>" +
-                            "            <td>" + data["k"][i][3] + "</td>" +
+                            "            <th scope=\"row\">" + key + "</th>" +
+                            "            <td>" + data["k"][0][key] + "</td>" +
+                            "            <td>" + data["k"][1][key].toFixed(4) + "</td>" +
+                            "            <td>" + data["k"][2][key].toFixed(4) + "</td>" +
+                            "            <td>" + data["k"][3][key].toFixed(4) + "</td>" +
                             "        </tr>");
                     }
                 }

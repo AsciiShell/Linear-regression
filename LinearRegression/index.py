@@ -7,13 +7,12 @@
 Автор: Подчезерцев А.Е.
 """
 from time import time
-from random import random
+
+import pandas as pd
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-import pandas as pd
-import statsmodels.api as sm
-from sklearn.datasets import load_boston
+from statsmodels.formula.api import ols
 
 
 def handle_uploaded_file(f, sep=';'):
@@ -50,7 +49,7 @@ def handle_uploaded_file(f, sep=';'):
                         return "/"
                 result += ";".join(items) + "\n"
             types = ";".join(["int" if _ == int else "float" for _ in types]) + "\n"
-            destination.write(types + result)
+            destination.write(result)
     except Exception as e:
         return "/"
     return filename
@@ -74,27 +73,10 @@ def load_dataset(name):
     """
     Загружает датасет с диска
     :param name: Имя файла
-    :return: Датасет и Имена переменных, None в случае ошибки
+    :return: Датасет
     Автор: Подчезерцев А.Е.
     """
-    dataset = None
-    head = None
-    try:
-        with open("files/" + name + ".csv", "r", encoding="utf-8") as f:
-            types = [int if _ == "int" else float for _ in f.readline()[:-1].split(";")]
-            head = f.readline()[:-1].split(";")
-            lines = f.readlines()
-            dataset = []
-            for line in lines:
-                items = line.split(";")
-                if len(head) != len(items):
-                    dataset = None
-                    break
-                dataset.append([types[i](items[i]) for i in range(len(items))])
-    except FileNotFoundError:
-        dataset = None
-    finally:
-        return dataset, head
+    return pd.read_csv("files/" + name + ".csv", sep=';', na_values=".")
 
 
 def handle_dataset(dataset, result, line, square):
@@ -107,8 +89,17 @@ def handle_dataset(dataset, result, line, square):
     :return: R квадрат и данные регрессии для переменных
     Автор: Подчезерцев А.Е.
     """
-    arr = [[random(), random(), random(), random()] for _ in range(len(dataset[0]))]
-    return random(), arr
+    statement = dataset.columns[result] + " ~ "
+    variables = []
+    for i in range(len(line)):
+        if line[i]:
+            variables.append(dataset.columns[i])
+    statement += " + ".join(variables)
+    model = ols(statement, dataset).fit()
+    return model.rsquared, [model.params.to_dict(),
+                            model.bse.to_dict(),
+                            model.tvalues.to_dict(),
+                            model.pvalues.to_dict(), ]
 
 
 @csrf_exempt
@@ -120,25 +111,25 @@ def calculate(request, num):
     :return: Данные регрессии при отправке запроса, иначе страницу
     Автор: Подчезерцев А.Е.
     """
-    dataset, head = load_dataset(str(num))
+    dataset = load_dataset(str(num))
     if request.method == "POST":
         result = None
-        line = [False for _ in range(len(head))]
-        square = [False for _ in range(len(head))]
+        line = [False for _ in range(len(dataset.columns))]
+        square = [False for _ in range(len(dataset.columns))]
         for key, value in request.POST.items():
             if key == 'result':
-                result = head.index(value)
+                result = dataset.columns.get_indexer_for([value])[0]
             elif key.startswith("variable-line-"):
-                line[head.index(value)] = True
+                line[dataset.columns.get_indexer_for([value])[0]] = True
             elif key.startswith("variable-square-"):
-                square[head.index(value)] = True
+                square[dataset.columns.get_indexer_for([value])[0]] = True
         if result is None or (True not in line and True not in square):
             return JsonResponse({'status': False})
         r, k = handle_dataset(dataset, result, line, square)
-        return JsonResponse({'status': True, 'r': r, 'k': k, 'name': head})
+        return JsonResponse({'status': True, 'r': r, 'k': k, 'name': dataset.columns.tolist()})
 
     return render(
         request,
         'calculate.html',
-        {'num': num, 'dataset': dataset, 'head': head}
+        {'num': num, 'dataset': dataset, 'head': dataset.columns.tolist()}
     )
