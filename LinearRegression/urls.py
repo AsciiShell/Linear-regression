@@ -20,6 +20,6 @@ Including another URLconf
 from django.urls import path
 from . import index
 urlpatterns = [
-    path('', index.uploadFile),
+    path('', index.upload_file),
     path('<int:num>.csv', index.calculate)
 ]

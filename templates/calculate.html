@@ -28,40 +28,44 @@
     Ошибка чтения датасета
     {% else %}
     <form id="form">
-        {% for line in head %}
-        <div class="form-row">
-            <div class="col-auto">
-                Имя: {{line}}
-            </div>
-            <div class="col-auto">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="result" id="radio{{line}}" value="{{line}}">
-                    <label class="form-check-label" for="radio{{line}}">
-                        Независимая
-                    </label>
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="variable-line-{{line}}"
-                           id="variableLine{{line}}" value="{{line}}">
-                    <label class="form-check-label" for="variableLine{{line}}">
-                        Линейно
-                    </label>
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="variable-square-{{line}}"
-                           id="variableSquare{{line}}" value="{{line}}">
-                    <label class="form-check-label" for="variableSquare{{line}}">
-                        Квадратично
-                    </label>
-                </div>
-            </div>
-        </div>
+        <table class="table table-sm ">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Независимая</th>
+                <th scope="col">Линейно</th>
+                <th scope="col">Квадратично</th>
+            </tr>
+            </thead>
+            <tbody>
 
-        {% endfor %}
+            {% for line in head %}
+            <tr>
+                <th>{{line}}</th>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="result" id="radio{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="radio{{line}}"></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="variable-line-{{line}}"
+                               id="variableLine{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="variableLine{{line}}"></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="variable-square-{{line}}"
+                               id="variableSquare{{line}}" value="{{line}}">
+                        <label class="form-check-label" for="variableSquare{{line}}"></label>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <button type="submit" class="btn btn-primary">Обработать</button>
     </form>
     <div class="alert alert-info collapse" role="alert">
@@ -104,7 +108,7 @@
                     for (let key in data['k'][0]) {
                         target.append(" <tr>" +
                             "            <th scope=\"row\">" + key + "</th>" +
-                            "            <td>" + data["k"][0][key] + "</td>" +
+                            "            <td>" + data["k"][0][key].toFixed(4) + "</td>" +
                             "            <td>" + data["k"][1][key].toFixed(4) + "</td>" +
                             "            <td>" + data["k"][2][key].toFixed(4) + "</td>" +
                             "            <td>" + data["k"][3][key].toFixed(4) + "</td>" +
@@ -114,6 +118,11 @@
                 else
                     $(".alert-warning").removeClass("collapse");
 
+            },
+            error: function (data) {
+                $(".alert-info").addClass("collapse");
+                $(".alert-warning").removeClass("collapse");
+                target.empty();
             }
         });
         $(".alert-info").removeClass("collapse");
