@@ -58,7 +58,7 @@ def handle_dataset(dataset, result, line, square):
     :param line: Логический массив переменных, которые должны быть обработаны линейно
     :param square: Логический массив переменных, которые должны быть обработаны квадратично
     :return: R квадрат и данные регрессии для переменных
-    Автор: Подчезерцев А.Е.
+    Автор: Солодянкин А.А.
     """
     statement = dataset.columns[result] + " ~ "
     variables = []
@@ -101,7 +101,7 @@ def calculate(request, num):
     :param request: Web-запрос
     :param num: номер файла
     :return: Данные регрессии при отправке запроса, иначе страницу
-    Автор: Подчезерцев А.Е.
+    Автор: Солодянкин А.А.
     """
     dataset = load_dataset("files/" + str(num) + ".csv")
     if request.method == "POST":
