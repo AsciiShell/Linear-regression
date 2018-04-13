@@ -4,7 +4,8 @@
 
 Данный файл сожержит методы для обработки данных и запросов web сервера
 
-Автор: Подчезерцев А.Е.
+Авторы: Подчезерцев А.Е.
+        Солодянкин А.А.
 """
 from time import time
 
@@ -18,6 +19,7 @@ from statsmodels.formula.api import ols
 def load_dataset(name, sep=',', end='\n'):
     """
     Загружает датасет с диска
+
     :param name: Имя файла
     :param sep: Формат разделителя столбцов, по умолчанию ','
     :param end: Формат разделителя строк, по умолчанию '\n'
@@ -30,6 +32,7 @@ def load_dataset(name, sep=',', end='\n'):
 def handle_uploaded_file(f, sep=';', end=None):
     """
     Проверяет загруженный файл
+
     :param f: Структура файла
     :param sep: Разделитель символов
     :param end: Разделитель строк
@@ -53,6 +56,7 @@ def handle_uploaded_file(f, sep=';', end=None):
 def handle_dataset(dataset, result, line, square):
     """
     Вычисляет параметры регрессии
+
     :param dataset: Датасет
     :param result: Номер результирующей переменной
     :param line: Логический массив переменных, которые должны быть обработаны линейно
@@ -77,6 +81,7 @@ def handle_dataset(dataset, result, line, square):
 def upload_file(request):
     """
     Обрабатывает web запрос загрузки файла
+
     :param request: Web-запрос
     :return: Перенаправление при отправке файла, иначе страницу
     Автор: Подчезерцев А.Е.
@@ -98,6 +103,7 @@ def upload_file(request):
 def calculate(request, num):
     """
     Обрабатывает web запрос вычисления регрессии
+
     :param request: Web-запрос
     :param num: номер файла
     :return: Данные регрессии при отправке запроса, иначе страницу
