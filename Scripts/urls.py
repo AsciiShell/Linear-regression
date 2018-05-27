@@ -18,7 +18,7 @@ Including another URLconf
         Подчезерцев А.Е.
 """
 from django.urls import path
-from . import index
+import index
 urlpatterns = [
     path('', index.upload_file),
     path('<int:num>.csv', index.calculate)

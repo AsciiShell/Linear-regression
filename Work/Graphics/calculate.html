@@ -95,6 +95,7 @@
 <script type="text/javascript">
     $("#form").submit(function (event) {
         event.preventDefault();
+        let target = $("#tableTarget");
         $.ajax({
             type: 'POST',
             data: $("#form").serialize(),
@@ -103,7 +104,6 @@
 
                 if (data["status"]) {
                     $("#r").text("R квадрат: " + data['r'].toFixed(4));
-                    let target = $("#tableTarget");
                     target.empty();
                     for (let key in data['k'][0]) {
                         target.append(" <tr>" +

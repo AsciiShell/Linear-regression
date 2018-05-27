@@ -6,3 +6,5 @@ files/
 db\.sqlite3
 
 LinearRegression/__pycache__/
+
+Work/Data/
