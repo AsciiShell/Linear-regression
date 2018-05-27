@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
-from Work.Library.reglib import *
+from Library.reglib import *
 
 
 @csrf_exempt

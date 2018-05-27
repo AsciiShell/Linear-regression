@@ -8,3 +8,5 @@ db\.sqlite3
 LinearRegression/__pycache__/
 
 Work/Data/
+
+Work/Library/__pycache__/

@@ -57,7 +57,7 @@ ROOT_URLCONF = 'urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['Work/Graphics'],
+        'DIRS': ['Graphics'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

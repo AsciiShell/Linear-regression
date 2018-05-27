@@ -12,7 +12,7 @@ from time import time
 import pandas as pd
 from statsmodels.formula.api import ols
 
-DATASET_PATH = "Work/Data/"
+DATASET_PATH = "Data/"
 
 
 def load_dataset(name, sep=',', end=None):
