@@ -10,7 +10,7 @@ import sys
 os.chdir("..")
 sys.path.append(os.path.abspath(os.path.curdir))
 sys.argv.append("runserver")
-sys.argv.append("127.0.0.1:80")
+sys.argv.append("0.0.0.0:8080")
 sys.argv.append("--noreload")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 try:
