@@ -10,8 +10,8 @@ import sys
 
 if __name__ == "__main__":
     os.chdir("..")
-    from Library.weblib import load_config
     sys.path.append(os.path.abspath(os.path.curdir))
+    from Library.weblib import load_config
     sys.argv.append("runserver")
     sys.argv.append(load_config())
     sys.argv.append("--noreload")
