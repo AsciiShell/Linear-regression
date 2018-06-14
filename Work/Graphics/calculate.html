@@ -104,13 +104,25 @@
                     $("#r").text("R квадрат: " + data['r'].toFixed(4));
                     target.empty();
                     for (let key in data['k'][0]) {
-                        target.append(" <tr>" +
-                            "            <th scope=\"row\">" + key + "</th>" +
-                            "            <td>" + data["k"][0][key].toFixed(4) + "</td>" +
-                            "            <td>" + data["k"][1][key].toFixed(4) + "</td>" +
-                            "            <td>" + data["k"][2][key].toFixed(4) + "</td>" +
-                            "            <td>" + data["k"][3][key].toFixed(4) + "</td>" +
-                            "        </tr>");
+                        try {
+                            target.append(" <tr>" +
+                                "            <th scope=\"row\">" + key + "</th>" +
+                                "            <td>" + data["k"][0][key].toFixed(4) + "</td>" +
+                                "            <td>" + data["k"][1][key].toFixed(4) + "</td>" +
+                                "            <td>" + data["k"][2][key].toFixed(4) + "</td>" +
+                                "            <td>" + data["k"][3][key].toFixed(4) + "</td>" +
+                                "        </tr>");
+                        }
+                        catch (e) {
+                            target.append(" <tr>" +
+                                "            <th scope=\"row\">" + key + "</th>" +
+                                "            <td>" + data["k"][0][key] + "</td>" +
+                                "            <td>" + data["k"][1][key] + "</td>" +
+                                "            <td>" + data["k"][2][key] + "</td>" +
+                                "            <td>" + data["k"][3][key] + "</td>" +
+                                "        </tr>");
+                        }
+
                     }
                 }
                 else

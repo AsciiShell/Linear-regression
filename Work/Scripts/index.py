@@ -61,6 +61,12 @@ def calculate(request, num):
         if result is None or (True not in line and True not in square):
             return JsonResponse({'status': False})
         r, k = handle_dataset(dataset, result, line, square)
+        for col in k:
+            for key, value in col.items():
+                if value == float("inf"):
+                    col[key] = "inf"
+                elif value != value:
+                    col[key] = "nan"
         return JsonResponse({'status': True, 'r': r, 'k': k})
 
     return render(
