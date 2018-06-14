@@ -23,7 +23,10 @@ if __name__ == "__main__":
     _locale._getdefaultlocale = (lambda *args: ['en_US', 'utf-8'])
     print("\nЗапуск сервера\n")
     # Открытие браузера
-    webbrowser.get().open("http://127.0.0.1:" + address.split(":")[1], new=2)
+    try:
+        webbrowser.get().open("http://127.0.0.1:" + address.split(":")[1], new=2)
+    except webbrowser.Error:
+        print("Не удалось открыть браузер. Продолжение загрузки")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
