@@ -25,7 +25,7 @@ def load_dataset(name, sep=',', end=None):
     :return: Датасет
     Автор: Подчезерцев А.Е.
     """
-    return pd.read_csv(name, sep=sep, lineterminator=end)
+    return pd.read_csv(name, sep=sep, lineterminator=end, encoding='utf-8')
 
 
 def handle_uploaded_file(f, sep=';', end=None):
@@ -46,7 +46,7 @@ def handle_uploaded_file(f, sep=';', end=None):
             destination.write(chunk)
     try:
         dataset = load_dataset(DATASET_PATH + ".temp", sep, end)
-        dataset.to_csv(DATASET_PATH + filename)
+        dataset.to_csv(DATASET_PATH + filename, encoding='utf-8')
     except Exception:
         return "/"
     return filename

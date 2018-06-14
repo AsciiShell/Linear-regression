@@ -8,6 +8,7 @@
 import os
 import sys
 import webbrowser
+import _locale
 
 if __name__ == "__main__":
     os.chdir("..")
@@ -18,7 +19,10 @@ if __name__ == "__main__":
     sys.argv.append(address)
     sys.argv.append("--noreload")
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+    # Исравление стандартной кодировки
+    _locale._getdefaultlocale = (lambda *args: ['en_US', 'utf-8'])
     print("\nЗапуск сервера\n")
+    # Открытие браузера
     webbrowser.get().open("http://127.0.0.1:" + address.split(":")[1], new=2)
     try:
         from django.core.management import execute_from_command_line
