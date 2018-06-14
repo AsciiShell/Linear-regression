@@ -78,4 +78,3 @@ def handle_dataset(dataset, result, line, square):
                             model.bse.to_dict(),
                             model.tvalues.to_dict(),
                             model.pvalues.to_dict(), ]
-
